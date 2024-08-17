@@ -11,6 +11,10 @@
     "keywords": ["typescript", "result", "error-handling"],
     "author": "preem",
     "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/prestonprince/presult.git"
+    },
     "devDependencies": {
       "typescript": "^4.5.0"
     },
