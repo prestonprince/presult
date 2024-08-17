@@ -1,0 +1,20 @@
+{
+    "name": "presult",
+    "version": "1.0.0",
+    "description": "A TypeScript package for handling result types",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+      "build": "tsc",
+      "prepublishOnly": "npm run build"
+    },
+    "keywords": ["typescript", "result", "error-handling"],
+    "author": "preem",
+    "license": "MIT",
+    "devDependencies": {
+      "typescript": "^4.5.0"
+    },
+    "files": [
+      "dist"
+    ]
+  }
