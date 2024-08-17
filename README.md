@@ -32,7 +32,7 @@ The `userResult` will produce an instance of the `Err` class, where the `error` 
 
 The `Ok` class takes in a generic type `T`, which will be used to correctly type the `message` field when constructed. The constructor takes in only one parameter of type `T` and assigns it to the `message` field, sets the `ok` field to `true` and the `error` field to `false`.
 
-The following example shows a function that returns an instance of the `Ok` class.
+The following example shows a function that returns an instance of the `Ok` or `Err` class..
 
 ```ts
 import { Ok } from "presult";
@@ -51,4 +51,7 @@ const userResult = await getUser(1);
 if (userResult.error) {
   console.error(userResult.message); // Logs error message "User not found"
 }
+
+// userResult does not contain an error
+console.log(userResult.message); // Prints a user of type TUser!
 ```
