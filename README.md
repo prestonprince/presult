@@ -4,54 +4,50 @@
 
 ## Usage
 
-`presult` introduces two classes `Ok` and `Err`. Both classes contain the same fields:
-`ok`, `error`, and `message`.
+`presult` introduces two functions `sResult` and `asResult`. These functions return instances of either the `Err` or `Ok` class, depending if an error is thrown or not.
 
-### `Err`
+### sResult Function
+
+Use the `sResult` function when executing a synchronous task that may fail. Simply pass in the function you want to call into `sResult`, and receive an instance of the `Ok` class if the function does not fail, and the `Err` class otherwise.
+
+```ts
+function syncFn(userId: number) {
+  if (userId <= 0) {
+    throw new Error("user ID must be greater than zero");
+  }
+
+  return `hello user ${userId}`;
+}
+
+const result = sResult(syncFn);
+if (result.error) {
+  console.log(result.message); // prints error message to screen
+}
+
+console.log(result.message); // prints hello user message to screen
+```
+
+### asResult Function
+
+Use the `asResult` function when executing asynchronous tasks that may fail. Pass in the async function as an argument to `asResult`, and receive an instance of the `Ok` class if the function does not fail, and the `Err` class otherwise.
+
+```ts
+async function asyncFn(userId: number) {
+  return await db.User.findById(userId).returning("users.id");
+}
+
+const result = await asResult(asyncFn);
+if (result.error) {
+  console.log(result.message); // prints database error message to screen
+}
+
+console.log(result.message); // prints user id to screen
+```
+
+### `Err` Class
 
 The `Err` class contstructor takes in a mandatory `string` representing an error message as the first parameter and a second optional `number` parameter, representing the `status` of the error. This could be useful to send status codes like `404` or `500`.
 
-The following example shows a function that returns an instance of the `Err` class.
-
-```ts
-import { Err } from "presult";
-
-async function getUser(userId: number): Promise<Err> {
-  return new Err("User not found");
-}
-
-const userResult = await getUser(1);
-if (userResult.error) {
-  console.error(userResult.message); // Logs error message "User not found"
-}
-```
-
-The `userResult` will produce an instance of the `Err` class, where the `error` field will be `true`, and the `ok` field will be `false`.
-
-### `Ok`
+### `Ok` Class
 
 The `Ok` class takes in a generic type `T`, which will be used to correctly type the `message` field when constructed. The constructor takes in only one parameter of type `T` and assigns it to the `message` field, sets the `ok` field to `true` and the `error` field to `false`.
-
-The following example shows a function that returns an instance of the `Ok` or `Err` class..
-
-```ts
-import { Ok } from "presult";
-
-type TUser = {
-  id: number;
-  name: string;
-};
-
-async function getUser(userId: number): Promise<Ok<TUser>> {
-  const user: TUser = await User().findById(userId);
-  return new Ok<TUser>(user);
-}
-
-const userResult = await getUser(1);
-if (userResult.error) {
-  console.error(userResult.message); // Logs error message "User not found"
-}
-
-// userResult does not contain an error
-console.log(userResult.message); // Prints a user of type TUser!
-```
