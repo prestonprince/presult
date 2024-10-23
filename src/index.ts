@@ -31,3 +31,21 @@ export class Err implements ErrorResult {
     if (status) this.status = status;
   }
 }
+
+export function sResult<T>(cb: () => T | undefined): Ok<T | undefined> | Err {
+  try {
+    const result = cb();
+    return new Ok(result ? result : undefined)
+  } catch (e: any) {
+    return new Err(e.message);
+  }
+}
+
+export async function asResult<T>(cb: () => Promise<T | undefined>): Promise<Ok<T | undefined> | Err> {
+  try {
+    const result = await cb()
+    return new Ok(result ? result : undefined);
+  } catch (e: any) {
+    return new Err(e.message)
+  }
+}
